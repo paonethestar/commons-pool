@@ -1206,6 +1206,18 @@ public class GenericKeyedObjectPool<K, T> extends BaseGenericObjectPool<T>
         final ObjectDeque<T> objectDeque = poolMap.get(key);
         return objectDeque != null ? objectDeque.getIdleObjects().size() : 0;
     }
+    
+    public List<K> getKeys() {
+        List<K> keyCopy = new ArrayList<K>();
+        Lock readLock = keyLock.readLock();
+        readLock.lock();
+        try {
+            keyCopy.addAll(poolKeyList);
+        } finally {
+            readLock.unlock();
+        }
+        return keyCopy;
+    }
 
 
     //--- JMX support ----------------------------------------------------------
