@@ -1014,6 +1014,22 @@ public class TestGenericKeyedObjectPool extends TestKeyedObjectPool {
         gkoPool.close();
     }
 
+    /**
+     * Verify getKeys() api.
+     *
+     **/
+    @Test
+    @Timeout(value = 60000, unit = TimeUnit.MILLISECONDS)
+    public void testGetKeys() throws Exception {
+        gkoPool.addObject("one");
+        assertEquals(1, gkoPool.getKeys().size());
+        gkoPool.addObject("two");
+        assertEquals(2, gkoPool.getKeys().size());
+        gkoPool.clear("one");
+        assertEquals(1, gkoPool.getKeys().size());
+        assertEquals("two", (String)gkoPool.getKeys().get(0));
+        gkoPool.clear();
+    }
 
     /**
      * Test to make sure that clearOldest does not destroy instances that have been checked out.
